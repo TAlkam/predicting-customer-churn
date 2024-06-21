@@ -1,128 +1,136 @@
 # Customer Churn Prediction
 
-This project aims to predict customer churn using a machine learning model. The project includes data preprocessing, model training, evaluation, and deployment using a Flask API.
+This project aims to predict customer churn using machine learning models. Customer churn prediction helps businesses identify customers who are likely to stop using their services, enabling them to take proactive measures to retain these customers and reduce losses.
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Dataset](#dataset)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Model Training](#model-training)
+- [Business Understanding](#business-understanding)
+- [Data Understanding](#data-understanding)
+- [Data Preprocessing](#data-preprocessing)
+- [Model Training and Evaluation](#model-training-and-evaluation)
 - [API Deployment](#api-deployment)
+- [Usage Example](#usage-example)
 - [Results](#results)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
 
-Customer churn prediction helps businesses identify customers who are likely to stop using their services. This project uses a Random Forest model to predict churn based on customer data.
+The goal of this project is to develop a model that predicts whether a customer will churn (leave the service) based on historical data. We used the "Customer Churn Dataset" from Kaggle for this purpose.
 
-## Dataset
+## Business Understanding
 
-The dataset used in this project is synthetic and was generated using `make_classification` from `sklearn.datasets`. The dataset is balanced using SMOTE (Synthetic Minority Over-sampling Technique).
+**Objective:** Reduce customer churn to increase revenue and improve customer retention.
 
-## Installation
+**Business Need:** The retail business needs a model to predict which customers are likely to churn so that targeted marketing strategies can be implemented to retain them.
 
-1. Clone the repository:
+## Data Understanding
 
-    ```bash
-    git clone https://github.com/Talkam/customer-churn-prediction.git
-    cd customer-churn-prediction
-    ```
+### Dataset
 
-2. Create and activate a virtual environment (optional but recommended):
+We used a publicly available dataset: **"Customer Churn Dataset" from Kaggle**.
 
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
+### Data Exploration
 
-3. Install the required dependencies:
+- Load the dataset and inspect the columns and data types.
+- Identify the target variable (`Churn`) and features (e.g., customer demographics, purchase history).
+- Check for missing values and handle them.
+- Remove duplicates if any.
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Data Preprocessing
 
-## Usage
+- **Handling Missing Values:** Missing values were handled by filling them with the mean for numerical features and the mode for categorical features.
+- **Encoding Categorical Variables:** Categorical variables were encoded using OneHotEncoder.
+- **Feature Scaling:** Numerical features were scaled using StandardScaler to ensure they are on the same scale.
+- **Balancing the Dataset:** Given the imbalance in the dataset, SMOTE (Synthetic Minority Over-sampling Technique) was applied to generate synthetic samples for the minority class.
 
-### Model Training
+## Model Training and Evaluation
 
-1. Train the machine learning model and save it:
+### Algorithms Used
 
-    ```python
-    import joblib
-    from sklearn.ensemble import RandomForestClassifier
+Three machine learning algorithms were used to train the models:
+1. Logistic Regression
+2. Decision Tree
+3. Random Forest
 
-    # Assuming X_train and y_train are your training data and labels
-    rf = RandomForestClassifier()
-    rf.fit(X_train, y_train)
+### Training Process
 
-    # Save the model
-    joblib.dump(rf, 'random_forest_model.pkl')
-    ```
+The models were trained on a balanced dataset to ensure fair evaluation. The dataset was split into training and testing sets using stratified sampling to maintain class distribution.
 
-### API Deployment
+### Evaluation Metrics
 
-1. Create a Flask API to serve the model:
+The models were evaluated using the following metrics:
+- **Accuracy**
+- **Precision**
+- **Recall**
+- **F1 Score**
 
-    ```python
-    from flask import Flask, request, jsonify
-    import joblib
-    import pandas as pd
+### Results
 
-    # Load the model
-    model = joblib.load('random_forest_model.pkl')
+The Random Forest model showed the best performance with the following metrics:
+- **Accuracy:** 98.89%
+- **Precision:** 99.25%
+- **Recall:** 98.52%
+- **F1 Score:** 98.88%
 
-    # Create Flask app
-    app = Flask(__name__)
+## API Deployment
 
-    @app.route('/predict', methods=['POST'])
-    def predict():
-        data = request.get_json(force=True)
-        df = pd.DataFrame(data)
-        prediction = model.predict(df)
-        return jsonify({'prediction': prediction.tolist()})
+### Saving the Model
 
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=5000, debug=True)
-    ```
+The trained Random Forest model was saved using `joblib`:
 
-2. Run the Flask API:
+```python
+import joblib
 
-    ```bash
-    python app.py
-    ```
+# Save the trained Random Forest model
+joblib.dump(rf, 'random_forest_model.pkl')
 
-### Sending a Prediction Request
 
-Use tools like Postman or cURL to send POST requests to the API.
+Creating Flask API
+A Flask API was created to serve the Random Forest model, allowing for real-time predictions.
 
-Example using cURL:
+from flask import Flask, request, jsonify
+import joblib
+import pandas as pd
 
-    ```bash
-    curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" -d '{"feature_1": [value1], "feature_2": [value2], ...}'
-    ```
+# Load the model
+model = joblib.load('random_forest_model.pkl')
 
-## Results
+# Create Flask app
+app = Flask(__name__)
 
-The model was evaluated using accuracy, precision, recall, and F1 score. The Random Forest model showed the best performance with the following metrics:
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.get_json(force=True)
+    df = pd.DataFrame(data)
+    prediction = model.predict(df)
+    return jsonify({'prediction': prediction.tolist()})
 
-- **Accuracy**: 98.89%
-- **Precision**: 99.25%
-- **Recall**: 98.52%
-- **F1 Score**: 98.88%
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
-## Contributing
+Usage Example
+Using cURL
+curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" -d '{"feature_1": [value1], "feature_2": [value2], ...}'
 
-Contributions are welcome! Please create a pull request or open an issue to discuss your ideas.
+Using Postman
+Set the URL to http://127.0.0.1:5000/predict.
+Set the method to POST.
+Set the Content-Type header to application/json.
+Add the JSON body with feature values.
+Send the request and view the response.
+Results
+The Random Forest model outperformed Logistic Regression and Decision Tree models, making it the most reliable choice for predicting customer churn. The balanced dataset ensured that the models were trained on an equal number of examples from both classes, resulting in reliable and unbiased performance metrics.
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new Pull Request.
+Contributing
+Contributions are welcome! Please follow these steps to contribute:
 
-## License
+Fork the repository.
+Create a new branch (git checkout -b feature-branch).
+Commit your changes (git commit -m 'Add some feature').
+Push to the branch (git push origin feature-branch).
+Create a new Pull Request.
+License
+This project is licensed under the MIT License
 
-This project is licensed under the MIT License.
