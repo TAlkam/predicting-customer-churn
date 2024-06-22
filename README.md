@@ -68,7 +68,7 @@ The models were evaluated using the following metrics:
 
 ### Results
 
-The Random Forest model showed the best performance with the following metrics:
+The Decision Tree model showed the best performance with the following metrics:
 - **Accuracy:** 98.89%
 - **Precision:** 99.25%
 - **Recall:** 98.52%
@@ -78,18 +78,18 @@ The Random Forest model showed the best performance with the following metrics:
 
 ### Saving the Model
 
-The trained Random Forest model was saved using `joblib`:
+The trained Decision Tree model was saved using `joblib`:
 
 ```python
 import joblib
 
-# Save the trained Random Forest model
-joblib.dump(rf, 'random_forest_model.pkl')
+# Save the trained Decision Tree model
+joblib.dump(rf, 'decision_tree_model.pkl')
 ```
 
 ### Streamlit Deployment
 
-A Streamlit application was created to serve the Random Forest model, allowing for real-time predictions.
+A Streamlit application was created to serve the Decision Tree model, allowing for real-time predictions.
 
 #### Streamlit App Code
 
@@ -99,7 +99,7 @@ import pandas as pd
 import joblib
 
 # Load the trained model
-model = joblib.load('random_forest_model.pkl')
+model = joblib.load('decision_tree_model.pkl')
 
 # Define the Streamlit app
 st.title('Customer Churn Prediction')
@@ -235,7 +235,7 @@ print(f"Public URL: {public_url}")
 
 ## Results
 
-The Random Forest model outperformed Logistic Regression and Decision Tree models, making it the most reliable choice for predicting customer churn. The balanced dataset ensured that the models were trained on an equal number of examples from both classes, resulting in reliable and unbiased performance metrics.
+The Decision Tree model outperformed Logistic Regression and Decision Tree models, making it the most reliable choice for predicting customer churn. The balanced dataset ensured that the models were trained on an equal number of examples from both classes, resulting in reliable and unbiased performance metrics.
 
 ## Contributing
 
