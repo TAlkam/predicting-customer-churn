@@ -187,3 +187,66 @@ input_data['tenure_group'] = input_data['tenure_group'].apply(lambda x: {'0-12 m
 # Debug line to check the shape and columns of the input data
 st.write("Features provided for prediction:", input_data.columns.tolist(), input_data.shape)
 
+
+
+# Predict churn
+if st.button('Predict Churn'):
+    prediction = model.predict(input_data)
+    if prediction[0] == 1:
+        st.write('The customer is likely to churn.')
+    else:
+        st.write('The customer is not likely to churn.')
+```
+
+#### Running the Streamlit App
+
+To run the Streamlit app locally, use the following command:
+
+```sh
+streamlit run app.py
+```
+
+#### Deploying with ngrok
+
+To deploy the app using ngrok, use the following setup:
+
+```python
+from pyngrok import ngrok
+
+# Set your ngrok authtoken
+ngrok.set_auth_token("your_ngrok_authtoken")
+
+# Start ngrok tunnel
+public_url = ngrok.connect(8501)
+print(f"Public URL: {public_url}")
+
+# Run the Streamlit app
+!streamlit run app.py
+```
+
+## Usage Example
+
+### Using the Streamlit App
+
+1. Run the Streamlit app using the command `streamlit run app.py`.
+2. Access the app through the provided ngrok URL.
+3. Input customer features in the provided fields.
+4. Click the 'Predict Churn' button to see the prediction result.
+
+## Results
+
+The Random Forest model outperformed Logistic Regression and Decision Tree models, making it the most reliable choice for predicting customer churn. The balanced dataset ensured that the models were trained on an equal number of examples from both classes, resulting in reliable and unbiased performance metrics.
+
+## Contributing
+
+Contributions are welcome! Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Commit your changes (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature-branch`).
+5. Create a new Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
